@@ -1,35 +1,77 @@
 # bild
 
-![bild logo](https://anthonynsimon.github.io/projects/bild/logo.png)  
+![bild logo](https://anthonynsimon.com/projects/bild/logo.png)  
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ea2b6aba032458e98fb22b7c292d92c)](https://app.codacy.com/app/anthonynajjars/bild?utm_source=github.com&utm_medium=referral&utm_content=anthonynsimon/bild&utm_campaign=badger)
 [![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/anthonynsimon/bild/blob/master/LICENSE)
 [![GoDoc](https://godoc.org/github.com/anthonynsimon/bild?status.svg)](https://godoc.org/github.com/anthonynsimon/bild)
-[![Build Status](https://travis-ci.org/anthonynsimon/bild.svg?branch=master)](https://travis-ci.org/anthonynsimon/bild)
+[![CircleCI](https://circleci.com/gh/anthonynsimon/bild/tree/master.svg?style=svg)](https://circleci.com/gh/anthonynsimon/bild/tree/master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/anthonynsimon/bild)](https://goreportcard.com/report/github.com/anthonynsimon/bild)
 
 A collection of parallel image processing algorithms in pure Go.
 
-The aim of this project is simplicity in use and development over high performance, but most algorithms are designed to be efficient and make use of parallelism when available. It is based on standard Go packages to reduce dependency use and development abstractions.
+The aim of this project is simplicity in use and development over absolute high performance, but most algorithms are designed to be efficient and make use of parallelism when available.
 
-**Notice:** This package is under heavy development and the API might change at any time until a 1.0 version is reached.
+It uses packages from the standard library whenever possible to reduce dependency use and development abstractions.
 
+All operations return image types from the standard library.
  
 ## Documentation
 
 http://godoc.org/github.com/anthonynsimon/bild
 
 
-## Install
+## CLI usage
 
-bild requires Go version 1.4 or greater.
+Download and compile from sources:
+```
+go get github.com/anthonynsimon/bild
+```
 
-    go get -u github.com/anthonynsimon/bild/...
-
-Notice the '...' at the end, this is to signify that you want all the packages on the repo. In your code, simply import the specific package that you want to use (see example below).
+Or get the pre-compiled binaries for your platform on the [releases page](https://github.com/anthonynsimon/bild/releases)
 
 
-## Basic example:
+```
+bild
+
+A collection of parallel image processing algorithms in pure Go
+
+Usage:
+  bild [command]
+
+Available Commands:
+  adjust      adjust basic image features like brightness or contrast
+  blend       blend two images together
+  blur        blur an image using the specified method
+  channel     channel operations on images
+  effect      apply effects on images
+  help        Help about any command
+  histogram   histogram operations on images
+  imgio       i/o operations on images
+  noise       noise generators
+  segment     segment an image using the specified method
+
+Flags:
+  -h, --help      help for bild
+      --version   version for bild
+
+Use "bild [command] --help" for more information about a command.
+```
+
+For example, to apply a median effect with a radius of 1.5 on the image `input.png`, writing the result into a new file called `output.png`:
+```
+bild effect median --radius 1.5 input.png output.png
+```
+
+
+## Install package
+
+bild requires Go version 1.11 or greater.
+
+```bash
+go get github.com/anthonynsimon/bild/...
+```
+
+## Basic package usage example:
 ```go
 package main
 
@@ -40,21 +82,21 @@ import (
 )
 
 func main() {
-    img, err := imgio.Open("filename.jpg")
+    img, err := imgio.Open("input.jpg")
     if err != nil {
-        panic(err)
+        fmt.Println(err)
+        return
     }
 
     inverted := effect.Invert(img)
     resized := transform.Resize(inverted, 800, 800, transform.Linear)
     rotated := transform.Rotate(resized, 45, nil)
 
-    // Or imgio.JPEGEncoder(95) as encoder for JPG with quality of 95%
-    if err := imgio.Save("filename.png", rotated, imgio.PNGEncoder()); err != nil {
-        panic(err)
+    if err := imgio.Save("output.png", rotated, imgio.PNGEncoder()); err != nil {
+        fmt.Println(err)
+        return
     }
 }
-
 ```
 
 # Output examples
@@ -64,28 +106,28 @@ func main() {
 ### Brightness
     result := adjust.Brightness(img, 0.25)
 
-![example](https://anthonynsimon.github.io/projects/bild/brightness.jpg)  
+![example](https://anthonynsimon.com/projects/bild/brightness.jpg)  
 
 ### Contrast
     result := adjust.Contrast(img, -0.5)
 
-![example](https://anthonynsimon.github.io/projects/bild/contrast.jpg)  
+![example](https://anthonynsimon.com/projects/bild/contrast.jpg)  
 
 ### Gamma
     result := adjust.Gamma(img, 2.2)
 
-![example](https://anthonynsimon.github.io/projects/bild/gamma.jpg)  
+![example](https://anthonynsimon.com/projects/bild/gamma.jpg)  
 
 
 ### Hue
     result := adjust.Hue(img, -42)
 
-![example](https://anthonynsimon.github.io/projects/bild/hue.jpg)  
+![example](https://anthonynsimon.com/projects/bild/hue.jpg)  
 
 ### Saturation
     result := adjust.Saturation(img, 0.5)
 
-![example](https://anthonynsimon.github.io/projects/bild/saturation.jpg)  
+![example](https://anthonynsimon.com/projects/bild/saturation.jpg)  
 
 
 
@@ -96,17 +138,17 @@ func main() {
 
 | Add | Color Burn | Color Dodge |
 | :----------: | :---------: | :------: |
-| ![](https://anthonynsimon.github.io/projects/bild/add.jpg) | ![](https://anthonynsimon.github.io/projects/bild/colorburn.jpg) | ![](https://anthonynsimon.github.io/projects/bild/colordodge.jpg) |
+| ![](https://anthonynsimon.com/projects/bild/add.jpg) | ![](https://anthonynsimon.com/projects/bild/colorburn.jpg) | ![](https://anthonynsimon.com/projects/bild/colordodge.jpg) |
 | **Darken** | **Difference** | **Divide** |
-| ![](https://anthonynsimon.github.io/projects/bild/darken.jpg) | ![](https://anthonynsimon.github.io/projects/bild/difference.jpg) | ![](https://anthonynsimon.github.io/projects/bild/divide.jpg) |
+| ![](https://anthonynsimon.com/projects/bild/darken.jpg) | ![](https://anthonynsimon.com/projects/bild/difference.jpg) | ![](https://anthonynsimon.com/projects/bild/divide.jpg) |
 | **Exclusion** | **Lighten** | **Linear Burn** |
-| ![](https://anthonynsimon.github.io/projects/bild/exclusion.jpg) | ![](https://anthonynsimon.github.io/projects/bild/lighten.jpg) | ![](https://anthonynsimon.github.io/projects/bild/linearburn.jpg) |
+| ![](https://anthonynsimon.com/projects/bild/exclusion.jpg) | ![](https://anthonynsimon.com/projects/bild/lighten.jpg) | ![](https://anthonynsimon.com/projects/bild/linearburn.jpg) |
 | **Linear Light** | **Multiply** | **Normal** |
-| ![](https://anthonynsimon.github.io/projects/bild/linearlight.jpg) | ![](https://anthonynsimon.github.io/projects/bild/multiply.jpg) | ![](https://anthonynsimon.github.io/projects/bild/normal.jpg) |
+| ![](https://anthonynsimon.com/projects/bild/linearlight.jpg) | ![](https://anthonynsimon.com/projects/bild/multiply.jpg) | ![](https://anthonynsimon.com/projects/bild/normal.jpg) |
 | **Opacity** | **Overlay** | **Screen** |
-| ![](https://anthonynsimon.github.io/projects/bild/opacity.jpg) | ![](https://anthonynsimon.github.io/projects/bild/overlay.jpg) | ![](https://anthonynsimon.github.io/projects/bild/screen.jpg) |
+| ![](https://anthonynsimon.com/projects/bild/opacity.jpg) | ![](https://anthonynsimon.com/projects/bild/overlay.jpg) | ![](https://anthonynsimon.com/projects/bild/screen.jpg) |
 | **Soft Light** | **Subtract** | |
-| ![](https://anthonynsimon.github.io/projects/bild/softlight.jpg) | ![](https://anthonynsimon.github.io/projects/bild/subtract.jpg) | |
+| ![](https://anthonynsimon.com/projects/bild/softlight.jpg) | ![](https://anthonynsimon.com/projects/bild/subtract.jpg) | |
 
 
 ## Blur
@@ -115,24 +157,26 @@ func main() {
 ### Box Blur
     result := blur.Box(img, 3.0)
 
-![example](https://anthonynsimon.github.io/projects/bild/boxblur.jpg)  
+![example](https://anthonynsimon.com/projects/bild/boxblur.jpg)  
 
 
 ### Gaussian Blur
     result := blur.Gaussian(img, 3.0)
 
 
-![example](https://anthonynsimon.github.io/projects/bild/gaussianblur.jpg)  
+![example](https://anthonynsimon.com/projects/bild/gaussianblur.jpg)  
 
 
 ## Channel
     import "github.com/anthonynsimon/bild/channel"
 
-### Extract Channel
+### Extract Channels
     result := channel.Extract(img, channel.Alpha)
 
-![example](https://anthonynsimon.github.io/projects/bild/extractchannel.jpg)  
+![example](https://anthonynsimon.com/projects/bild/extractchannel.jpg)
 
+### Extract Multiple Channels
+    result := channel.ExtractMultiple(img, channel.Red, channel.Alpha)
 
 ## Effect
     import "github.com/anthonynsimon/bild/effect"
@@ -140,57 +184,57 @@ func main() {
 ### Dilate
     result := effect.Dilate(img, 3)
 
-![example](https://anthonynsimon.github.io/projects/bild/dilate.jpg)     
+![example](https://anthonynsimon.com/projects/bild/dilate.jpg)     
 
 ### Edge Detection
     result := effect.EdgeDetection(img, 1.0)
 
-![example](https://anthonynsimon.github.io/projects/bild/edgedetection.jpg)  
+![example](https://anthonynsimon.com/projects/bild/edgedetection.jpg)  
 
 ### Emboss
     result := effect.Emboss(img)
 
-![example](https://anthonynsimon.github.io/projects/bild/emboss.jpg)  
+![example](https://anthonynsimon.com/projects/bild/emboss.jpg)  
 
 ### Erode
     result := effect.Erode(img, 3)
 
-![example](https://anthonynsimon.github.io/projects/bild/erode.jpg)   
+![example](https://anthonynsimon.com/projects/bild/erode.jpg)   
 
 ### Grayscale
     result := effect.Grayscale(img)
 
-![example](https://anthonynsimon.github.io/projects/bild/grayscale.jpg)  
+![example](https://anthonynsimon.com/projects/bild/grayscale.jpg)  
 
 ### Invert
     result := effect.Invert(img)
 
-![example](https://anthonynsimon.github.io/projects/bild/invert.jpg)  
+![example](https://anthonynsimon.com/projects/bild/invert.jpg)  
 
 ### Median
     result := effect.Median(img, 10.0)
 
-![example](https://anthonynsimon.github.io/projects/bild/median.jpg)  
+![example](https://anthonynsimon.com/projects/bild/median.jpg)  
 
 ### Sepia
     result := effect.Sepia(img)
 
-![example](https://anthonynsimon.github.io/projects/bild/sepia.jpg)  
+![example](https://anthonynsimon.com/projects/bild/sepia.jpg)  
 
 ### Sharpen
     result := effect.Sharpen(img)
 
-![example](https://anthonynsimon.github.io/projects/bild/sharpen.jpg)  
+![example](https://anthonynsimon.com/projects/bild/sharpen.jpg)  
 
 ### Sobel
     result := effect.Sobel(img)
 
-![example](https://anthonynsimon.github.io/projects/bild/sobel.jpg)  
+![example](https://anthonynsimon.com/projects/bild/sobel.jpg)  
 
 ### Unsharp Mask
     result := effect.UnsharpMask(img, 0.6, 1.2)
 
-![example](https://anthonynsimon.github.io/projects/bild/unsharpmask.jpg)  
+![example](https://anthonynsimon.com/projects/bild/unsharpmask.jpg)  
 
 
 ## Histogram
@@ -200,7 +244,7 @@ func main() {
     hist := histogram.NewRGBAHistogram(img)
     result := hist.Image()
 
-![example](https://anthonynsimon.github.io/projects/bild/histogram.png)  
+![example](https://anthonynsimon.com/projects/bild/histogram.png)  
 
 
 ## Noise
@@ -209,19 +253,19 @@ func main() {
 ### Uniform colored
     result := noise.Generate(280, 280, &noise.Options{Monochrome: false, NoiseFn: noise.Uniform})
 
-![example](https://anthonynsimon.github.io/projects/bild/noiseuniform.jpg)  
+![example](https://anthonynsimon.com/projects/bild/noiseuniform.jpg)  
 
 
 ### Binary monochrome
     result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Binary})
 
-![example](https://anthonynsimon.github.io/projects/bild/noisebinary.jpg)  
+![example](https://anthonynsimon.com/projects/bild/noisebinary.jpg)  
 
 
 ### Gaussian monochrome
     result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Gaussian})
 
-![example](https://anthonynsimon.github.io/projects/bild/noisegaussian.jpg)  
+![example](https://anthonynsimon.com/projects/bild/noisegaussian.jpg)  
 
 
 ## Paint
@@ -231,7 +275,7 @@ func main() {
     // Fuzz is the percentage of maximum color distance that is tolerated
     result := paint.FloodFill(img, image.Point{240, 0}, color.RGBA{255, 0, 0, 255}, 15)
 
-![example](https://anthonynsimon.github.io/projects/bild/floodfill.jpg) 
+![example](https://anthonynsimon.com/projects/bild/floodfill.jpg) 
 
 
 ## Segmentation
@@ -240,7 +284,7 @@ func main() {
 ### Threshold
     result := segment.Threshold(img, 128)
 
-![example](https://anthonynsimon.github.io/projects/bild/threshold.jpg)
+![example](https://anthonynsimon.com/projects/bild/threshold.jpg)
 
 
 ## Transform
@@ -250,17 +294,17 @@ func main() {
     // Source image is 280x280
     result := transform.Crop(img, image.Rect(70,70,210,210))
 
-![example](https://anthonynsimon.github.io/projects/bild/crop.jpg)
+![example](https://anthonynsimon.com/projects/bild/crop.jpg)
 
 ### FlipH
     result := transform.FlipH(img)
 
-![example](https://anthonynsimon.github.io/projects/bild/fliph.jpg)  
+![example](https://anthonynsimon.com/projects/bild/fliph.jpg)  
 
 ### FlipV
     result := transform.FlipV(img)
 
-![example](https://anthonynsimon.github.io/projects/bild/flipv.jpg) 
+![example](https://anthonynsimon.com/projects/bild/flipv.jpg) 
 
 
 ### Resize Resampling Filters
@@ -268,47 +312,43 @@ func main() {
 
 | Nearest Neighbor | Linear | Gaussian |
 |:----------: | :---------: | :------: |
-| ![](https://anthonynsimon.github.io/projects/bild/resizenearestneighbor.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelinear.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizegaussian.jpg) |
+| ![](https://anthonynsimon.com/projects/bild/resizenearestneighbor.jpg) | ![](https://anthonynsimon.com/projects/bild/resizelinear.jpg) | ![](https://anthonynsimon.com/projects/bild/resizegaussian.jpg) |
 | **Mitchell Netravali** | **Catmull Rom** | **Lanczos** |
-| ![](https://anthonynsimon.github.io/projects/bild/resizemitchell.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizecatmullrom.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelanczos.jpg) |
+| ![](https://anthonynsimon.com/projects/bild/resizemitchell.jpg) | ![](https://anthonynsimon.com/projects/bild/resizecatmullrom.jpg) | ![](https://anthonynsimon.com/projects/bild/resizelanczos.jpg) |
 
 
 ### Rotate
     // Options set to nil will use defaults (ResizeBounds set to false, Pivot at center)
     result := transform.Rotate(img, -45.0, nil)
 
-![example](https://anthonynsimon.github.io/projects/bild/rotation03.gif)
+![example](https://anthonynsimon.com/projects/bild/rotation03.gif)
 
     // If ResizeBounds is set to true, the full rotation bounding area is used
     result := transform.Rotate(img, -45.0, &transform.RotationOptions{ResizeBounds: true})
 
-![example](https://anthonynsimon.github.io/projects/bild/rotation01.gif)
+![example](https://anthonynsimon.com/projects/bild/rotation01.gif)
 
     // Pivot coordinates are set from the top-left corner
     // Notice ResizeBounds being set to default (false)
     result := transform.Rotate(img, -45.0, &transform.RotationOptions{Pivot: &image.Point{0, 0}})
 
-![example](https://anthonynsimon.github.io/projects/bild/rotation02.gif)
+![example](https://anthonynsimon.com/projects/bild/rotation02.gif)
 
 ### Shear Horizontal
     result := transform.ShearH(img, 30)
 
-![example](https://anthonynsimon.github.io/projects/bild/shearh.jpg)  
+![example](https://anthonynsimon.com/projects/bild/shearh.jpg)  
 
 ### Shear Vertical
     result := transform.ShearV(img, 30)
 
-![example](https://anthonynsimon.github.io/projects/bild/shearv.jpg) 
+![example](https://anthonynsimon.com/projects/bild/shearv.jpg) 
 
 ### Translate
     result := transform.Translate(img, 80, 0)
 
-![example](https://anthonynsimon.github.io/projects/bild/translate.jpg) 
+![example](https://anthonynsimon.com/projects/bild/translate.jpg) 
 
-
-## License
-
-This project is licensed under the MIT license. Please read the LICENSE file.
 
 ## Contribute
 
@@ -323,3 +363,12 @@ Simply follow the next steps:
 
 In case you want to add a feature, please create a new issue and briefly explain what the feature would consist of. 
 For bugs or requests, before creating an issue please check if one has already been created for it.
+
+
+## Changelog
+
+Please see the [changelog](CHANGELOG.md) for more details.
+
+## License
+
+This project is licensed under the MIT license. Please read the LICENSE file.
